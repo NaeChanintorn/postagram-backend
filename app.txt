@@ -1,0 +1,6 @@
+Register 
+    - Authenticate (JWT,Bcrypt) : authRoute,authcontroller,service(hash,jwt,user),Authenticate
+    - Validate (Joi) : authValidate,user-service
+
+Login 
+    - Validate (Joi) : authValidate,user-service เช็ค mobile , email , username

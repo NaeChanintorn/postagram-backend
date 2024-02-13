@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  firstName    String         @map("first_name")
+  lastName     String         @map("last_name")
+  email        String?        @unique
+  mobile       String?        @unique
+  userName     String         @unique @map("user_name")
+  password     String
+  profileImage String?        @map("profile_image")
+  bio          String?
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamp(0)
+  followers    Relationship[] @relation("follower")
+  following    Relationship[] @relation("following")
+  posts        Post[]
+  likes        Like[]
+  comments     Comment[]
+
+  @@map("users")
+}
+
+model Relationship {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  Int      @map("follower_id")
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId Int      @map("following_id")
+
+  @@map("relationships")
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  image     String
+  caption   String?
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
+  isDeleted Boolean   @default(false)
+  poster    User      @relation(fields: [posterId], references: [id])
+  posterId  Int       @map("poster_id")
+  likes     Like[]
+  comments  Comment[]
+
+  @@map("posts")
+}
+
+model Like {
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @map("user_id")
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int      @map("post_id")
+
+  @@id([userId, postId])
+  @@map("likes")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  comment     String
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+  commenter   User     @relation(fields: [commenterId], references: [id])
+  commenterId Int      @map("commenter_id")
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int      @map("post_id")
+
+  @@map("comments")
+}
