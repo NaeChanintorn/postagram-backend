@@ -26,3 +26,17 @@ exports.findUserByMobileOrEmailOrUserName = (mobileOrEmailOrUserName) =>
 exports.createUser = (data) => prisma.user.create({ data });
 
 exports.findUserById = (id) => prisma.user.findUnique({ where: { id } });
+
+// Edit Profile
+
+exports.updateUserByid = (profileImage, id) =>
+  prisma.user.update({
+    data: { profileImage },
+    where: { id },
+  });
+
+exports.updateBioById = (bio, id) =>
+  prisma.user.update({
+    data: { bio },
+    where: { id },
+  });
