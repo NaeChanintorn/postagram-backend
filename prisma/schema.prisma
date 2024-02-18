@@ -40,16 +40,16 @@ model Relationship {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  image     String
-  caption   String?
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
-  isDeleted Boolean   @default(false)
-  poster    User      @relation(fields: [posterId], references: [id])
-  posterId  Int       @map("poster_id")
-  likes     Like[]
-  comments  Comment[]
+  id           Int       @id @default(autoincrement())
+  imageOrVideo String    @map("image_or_video")
+  caption      String?
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamp(0)
+  isDeleted    Boolean   @default(false)
+  poster       User      @relation(fields: [posterId], references: [id])
+  posterId     Int       @map("poster_id")
+  likes        Like[]
+  comments     Comment[]
 
   @@map("posts")
 }
