@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.patch("/", upload.single("profileImage"), updateUser);
 router.patch("/bio", updateUserBio);
+router.get("/suggest", getSuggestedUsers);
 
 // Suggested
 

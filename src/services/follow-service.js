@@ -12,10 +12,12 @@ exports.createFollowById = (userId, followingId) =>
 
 exports.checkAllFollow = (userId, followingId) =>
   prisma.relationship.findMany({
-    where: { followerId: userId, followingId },
+    where: { AND: [{ followerId: userId }, { followingId }] },
   });
 
 exports.unfollowById = (userId, followingId) =>
-  prisma.relationship.delete({
-    where: { followerId: userId, followingId },
+  prisma.relationship.deleteMany({
+    where: {
+      AND: [{ followerId: userId }, { followingId }],
+    },
   });

@@ -27,6 +27,14 @@ exports.createUser = (data) => prisma.user.create({ data });
 
 exports.findUserById = (id) => prisma.user.findUnique({ where: { id } });
 
+exports.countAllUsers = () => prisma.user.count();
+
+exports.RandomUser = (countUsers) =>
+  prisma.user.findMany({
+    take: 4,
+    skip: Math.floor(Math.random() * (countUsers - 3)),
+  });
+
 // Edit Profile
 
 exports.updateUserByid = (profileImage, id) =>

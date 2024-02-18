@@ -1,6 +1,4 @@
-const { relationship } = require("../models/prisma");
 const {
-  checkFollow,
   createFollowById,
   checkFollowById,
   unfollowById,
@@ -54,13 +52,13 @@ exports.unfolllow = catchError(async (req, res, next) => {
     createError("You cannot unfollow yourself", 400);
   }
 
-  const isFollow = await checkFollowById(user.id, +id);
+  const isFollow = await checkFollowById(+user.id, +id);
 
   if (!isFollow) {
     createError("You're not following this user", 400);
   }
 
-  const isUnfollow = await unfollowById(user.id, +id, user.id);
+  const isUnfollow = await unfollowById(+user.id, +id);
 
   res.status(200).json({ isUnfollow });
 });

@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const authRoute = require("./routes/auth-route");
 const userRoute = require("./routes/user-route");
 const followRoute = require("./routes/follow-route");
+const searchRoute = require("./routes/search-route");
+const postRoute = require("./routes/post-route");
 
 const errorHandler = require("./middlewares/error");
 const notFound = require("./middlewares/not-found");
@@ -25,6 +27,8 @@ app.use(morgan("dev"));
 app.use("/auth", authRoute);
 app.use("/users", authenticate, userRoute);
 app.use("/follow", authenticate, followRoute);
+app.use("/search", authenticate, searchRoute);
+app.use("/posts", authenticate, postRoute);
 
 // Error , Not-Found
 app.use(notFound);
