@@ -3,6 +3,7 @@ const catchError = require("../utils/catch-error");
 const createError = require("../utils/create-error");
 
 exports.searchUser = catchError(async (req, res, next) => {
+  console.log(req);
   const { userName } = req.body;
 
   const user = await searchUserByUserName(userName);

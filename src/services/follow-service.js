@@ -1,8 +1,28 @@
 const prisma = require("../models/prisma");
 
+const userData = {
+  id: true,
+  firstName: true,
+  lastName: true,
+  email: true,
+  mobile: true,
+  userName: true,
+  profileImage: true,
+  password: false,
+  bio: true,
+};
+
 exports.checkFollowById = (userId, followingId) =>
   prisma.relationship.findFirst({
     where: { followerId: userId, followingId },
+    select: {
+      // follower: {
+      //   select: userData,
+      // },
+      following: {
+        select: userData,
+      },
+    },
   });
 
 exports.createFollowById = (userId, followingId) =>
@@ -10,9 +30,9 @@ exports.createFollowById = (userId, followingId) =>
     data: { followerId: userId, followingId },
   });
 
-exports.checkAllFollow = (userId, followingId) =>
+exports.checkAllFollow = (userId) =>
   prisma.relationship.findMany({
-    where: { AND: [{ followerId: userId }, { followingId }] },
+    where: { OR: [{ followerId: userId }, { followingId: userId }] },
   });
 
 exports.unfollowById = (userId, followingId) =>

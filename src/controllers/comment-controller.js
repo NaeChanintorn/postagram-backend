@@ -10,16 +10,15 @@ const createError = require("../utils/create-error");
 
 exports.createComment = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId } = req.params;
-  const { comment } = req.body;
+  const { comment, postId } = req.body;
 
-  const data = await createCommentService(comment, +postId, id);
-  res.status(200).json({ data });
+  const newComment = await createCommentService(comment, +postId, id);
+  res.status(200).json({ newComment });
 });
 
 exports.deleteComment = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId, commentId } = req.params;
+  const { postId, commentId } = req.body;
 
   const isComment = await findCommentByCommentId(+commentId, id, +postId);
 
@@ -27,13 +26,13 @@ exports.deleteComment = catchError(async (req, res, next) => {
     createError("Is not you're comment");
   }
 
-  await deleteCommentService(commentId);
+  await deleteCommentService(+commentId);
 
   res.status(200).json({ message: "Delete success" });
 });
 
 exports.getCommentInPost = catchError(async (req, res, next) => {
-  const { postId } = req.params;
+  const { postId } = req.body;
 
   const allComments = await getCommentService(+postId);
   res.status(200).json({ allComments });
@@ -41,8 +40,7 @@ exports.getCommentInPost = catchError(async (req, res, next) => {
 
 exports.editComment = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId, commentId } = req.params;
-  const { comment } = req.body;
+  const { comment, postId, commentId } = req.body;
 
   const isComment = await findCommentByCommentId(+commentId, id, +postId);
 

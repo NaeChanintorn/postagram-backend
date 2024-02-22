@@ -9,9 +9,9 @@ const createError = require("../utils/create-error");
 
 exports.createLike = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId } = req.params;
-
-  const isLike = await findLikeByUserId(+postId, id);
+  const { postId, userId } = req.body;
+  console.log(req.body);
+  const isLike = await findLikeByUserId(+postId, userId);
 
   // if postId has like by userId => cant like anymore
   if (isLike) {
@@ -25,7 +25,8 @@ exports.createLike = catchError(async (req, res, next) => {
 
 exports.deleteLike = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId } = req.params;
+  const { postId } = req.body;
+  // console.log(req);
 
   const isLike = await findLikeByUserId(+postId, id);
 
@@ -40,7 +41,7 @@ exports.deleteLike = catchError(async (req, res, next) => {
 });
 
 exports.getAllLikesInPost = catchError(async (req, res, next) => {
-  const { postId } = req.params;
+  const { postId } = req.body;
 
   const allLikes = await getAllLikeService(+postId);
   res.status(200).json({ allLikes });

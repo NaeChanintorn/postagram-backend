@@ -34,11 +34,19 @@ exports.findAllPost = async (userId, followingId) => {
         select: userData,
       },
       likes: true,
+      comments: true,
     },
   });
 
   return posts;
 };
+
+exports.getPostForEachUserService = (userId) =>
+  prisma.post.findMany({
+    where: {
+      posterId: +userId,
+    },
+  });
 
 exports.getPostByPostId = (postId) =>
   prisma.post.findFirst({
@@ -57,10 +65,10 @@ exports.editPostService = (postId, caption) =>
     },
   });
 
-exports.deletePostService = (postId, isDeleted) =>
+exports.deletePostService = (postId) =>
   prisma.post.update({
     data: {
-      isDeleted,
+      isDeleted: true,
     },
     where: {
       id: +postId,

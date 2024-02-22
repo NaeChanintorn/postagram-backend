@@ -1,7 +1,7 @@
 const prisma = require("../models/prisma");
 
 exports.searchUserByUserName = (userName) =>
-  prisma.user.findMany({
+  prisma.user.findFirst({
     where: {
       userName,
     },

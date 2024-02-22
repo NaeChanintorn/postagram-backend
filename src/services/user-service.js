@@ -25,12 +25,25 @@ exports.findUserByMobileOrEmailOrUserName = (mobileOrEmailOrUserName) =>
 
 exports.createUser = (data) => prisma.user.create({ data });
 
-exports.findUserById = (id) => prisma.user.findUnique({ where: { id } });
+exports.findUserById = (id) =>
+  prisma.user.findUnique({
+    where: { id },
+    include: {
+      posts: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+
+// Suggested User
 
 exports.countAllUsers = () => prisma.user.count();
 
-exports.RandomUser = (countUsers) =>
+exports.RandomUser = (id, countUsers) =>
   prisma.user.findMany({
+    where: { NOT: { id } },
     take: 4,
     skip: Math.floor(Math.random() * (countUsers - 3)),
   });

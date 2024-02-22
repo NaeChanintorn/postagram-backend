@@ -6,8 +6,10 @@ const {
   updateUserByid,
   updateBioById,
   RandomUser,
+  findUserById,
   countAllUsers,
 } = require("../services/user-service");
+const { checkFollowById } = require("../services/follow-service");
 
 exports.updateUser = catchError(async (req, res, next) => {
   if (!req.file) {
@@ -34,16 +36,39 @@ exports.updateUserBio = catchError(async (req, res, next) => {
   res.status(200).json({ bio });
 });
 
+//  Suggested Users
+
 exports.getSuggestedUsers = catchError(async (req, res, next) => {
+  const { id } = req.user;
+
   const countUsers = await countAllUsers();
 
-  const randomUser = await RandomUser(countUsers);
+  const randomUser = await RandomUser(id, countUsers);
 
   // delete password;
 
   for (let i = 0; i < randomUser.length; i++) {
     delete randomUser[i].password;
   }
-
   res.status(200).json({ randomUser });
+});
+
+// exports.getAllUsers = catchError(async (req, res, next) => {
+//   const { targetUserId } = req.params;
+//   const allUsers = await findUserById(+targetUserId);
+//   if (!allUsers) {
+//     createError("User was not found!", 400);
+//   }
+//   delete allUsers.password;
+//   next();
+// });
+
+exports.getUserProfileByTargetUserId = catchError(async (req, res, next) => {
+  const { targetUserId } = req.params;
+  const profileUser = await findUserById(+targetUserId);
+  if (!profileUser) {
+    createError("User was not found!", 400);
+  }
+  delete profileUser.password;
+  res.status(200).json({ profileUser });
 });

@@ -4,6 +4,7 @@ const {
   editPostService,
   getPostByPostId,
   deletePostService,
+  getPostForEachUserService,
 } = require("../services/post-service");
 const { uploadImage, uploadVideo } = require("../services/upload-service");
 const catchError = require("../utils/catch-error");
@@ -13,9 +14,10 @@ const createError = require("../utils/create-error");
 
 exports.createPost = catchError(async (req, res, next) => {
   const { id } = req.user;
+  // console.log(req.file);
 
   const data = { posterId: +id, caption: req.body.caption };
-  console.log(req.file);
+  console.log(req, "---------------------");
 
   if (!req.file) {
     createError("Image or video is required");
@@ -55,11 +57,17 @@ exports.getAllPosts = catchError(async (req, res, next) => {
   res.status(200).json({ posts });
 });
 
+exports.getAllPostsForEachUser = catchError(async (req, res, next) => {
+  const { userId } = req.params;
+  const posts = await getPostForEachUserService(userId);
+
+  res.status(200).json({ posts });
+});
+
 // edit post => caption
 exports.editPostByPostId = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId } = req.params;
-  const { caption } = req.body;
+  const { postId, caption } = req.body;
 
   const post = await getPostByPostId(postId);
 
@@ -67,7 +75,7 @@ exports.editPostByPostId = catchError(async (req, res, next) => {
     createError(`You can't edit other people's post`, 400);
   }
 
-  const data = await editPostService(postId, caption);
+  const data = await editPostService(+postId, caption);
 
   res.status(200).json({ data });
 });
@@ -75,15 +83,14 @@ exports.editPostByPostId = catchError(async (req, res, next) => {
 // delete post => fake = patch => isdelete(true)
 exports.deletePostByPostId = catchError(async (req, res, next) => {
   const { id } = req.user;
-  const { postId } = req.params;
-  const { isDeleted } = req.body;
+  const { postId } = req.body;
   const post = await getPostByPostId(postId);
 
   if (id !== post.posterId) {
     createError(`You can't delete other people's post`, 400);
   }
 
-  const data = await deletePostService(postId, isDeleted);
+  const data = await deletePostService(postId);
 
   res.status(201).json({ data });
 });

@@ -11,18 +11,22 @@ const createError = require("../utils/create-error");
 
 exports.createFollow = catchError(async (req, res, next) => {
   const { id } = req.user;
-
   const { followingId } = req.body;
-  if (id === followingId) {
+
+  console.log(req.body);
+  if (id === +followingId) {
     createError("You cannot follow yourself", 400);
   }
 
-  const isFollow = await checkFollowById(id, followingId);
+  const isFollow = await checkFollowById(id, +followingId);
+
+  // console.log(isFollow);
 
   if (isFollow) {
     createError("You're following this user", 400);
   }
-  const data = await createFollowById(id, followingId);
+
+  const data = await createFollowById(id, +followingId);
 
   res.status(200).json({ data });
 });
@@ -41,8 +45,6 @@ exports.getCheckFollow = catchError(async (req, res, next) => {
 
   res.status(200).json({ isFollow });
 });
-
-// unFollow not finish
 
 exports.unfolllow = catchError(async (req, res, next) => {
   const user = req.user;
