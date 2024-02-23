@@ -9,7 +9,10 @@ const {
   findUserById,
   countAllUsers,
 } = require("../services/user-service");
-const { checkFollowById } = require("../services/follow-service");
+const {
+  checkFollowById,
+  checkAllFollow,
+} = require("../services/follow-service");
 
 exports.updateUser = catchError(async (req, res, next) => {
   if (!req.file) {
@@ -41,9 +44,11 @@ exports.updateUserBio = catchError(async (req, res, next) => {
 exports.getSuggestedUsers = catchError(async (req, res, next) => {
   const { id } = req.user;
 
+  const isfollowing = await checkAllFollow(id);
+
   const countUsers = await countAllUsers();
 
-  const randomUser = await RandomUser(id, countUsers);
+  const randomUser = await RandomUser(id, countUsers, isfollowing.followingId);
 
   // delete password;
 

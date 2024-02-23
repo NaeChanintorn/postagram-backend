@@ -3,6 +3,8 @@ const {
   checkFollowById,
   unfollowById,
   checkAllFollow,
+  countFollowing,
+  countFollower,
 } = require("../services/follow-service");
 const catchError = require("../utils/catch-error");
 const createError = require("../utils/create-error");
@@ -63,4 +65,18 @@ exports.unfolllow = catchError(async (req, res, next) => {
   const isUnfollow = await unfollowById(+user.id, +id);
 
   res.status(200).json({ isUnfollow });
+});
+
+exports.getCountFollowing = catchError(async (req, res, next) => {
+  const { id } = req.params;
+  // นับคนที่เราไปฟอล (following) ใน Frontend
+  const count = await countFollowing(+id);
+  res.status(200).json({ count });
+});
+
+exports.getCountFollower = catchError(async (req, res, next) => {
+  const { id } = req.params;
+  // นับคนที่มาฟอลเรา (follower) ใน Frontend
+  const count = await countFollower(+id);
+  res.status(200).json({ count });
 });

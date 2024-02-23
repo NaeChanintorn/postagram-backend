@@ -41,3 +41,13 @@ exports.unfollowById = (userId, followingId) =>
       AND: [{ followerId: userId }, { followingId }],
     },
   });
+
+exports.countFollowing = (id) =>
+  prisma.relationship.count({
+    where: { followerId: id },
+  });
+
+exports.countFollower = (id) =>
+  prisma.relationship.count({
+    where: { followingId: id },
+  });

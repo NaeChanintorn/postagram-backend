@@ -33,6 +33,9 @@ exports.findUserById = (id) =>
         orderBy: {
           createdAt: "desc",
         },
+        include: {
+          likes: true,
+        },
       },
     },
   });
@@ -41,9 +44,9 @@ exports.findUserById = (id) =>
 
 exports.countAllUsers = () => prisma.user.count();
 
-exports.RandomUser = (id, countUsers) =>
+exports.RandomUser = (id, countUsers, followingId) =>
   prisma.user.findMany({
-    where: { NOT: { id } },
+    where: { NOT: { id, followingId } },
     take: 4,
     skip: Math.floor(Math.random() * (countUsers - 3)),
   });

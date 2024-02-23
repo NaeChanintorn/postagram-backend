@@ -39,7 +39,7 @@ router.get("/all-likes", getAllLikesInPost);
 // comment
 router.post("/comment", createComment); // postId
 router.delete("/delete-comment", deleteComment); // id = commentId , postId
-router.get("/get-comment", getCommentInPost); // postId
+router.post("/get-comment", getCommentInPost); // postId
 router.patch("/edit-comment", editComment); // postId,commentId
 
 module.exports = router;

@@ -30,6 +30,9 @@ exports.getCommentService = (postId) =>
     where: {
       postId,
     },
+    include: {
+      commenter: true,
+    },
   });
 
 exports.editCommentService = (comment, commentId) =>
