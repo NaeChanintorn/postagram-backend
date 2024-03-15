@@ -15,7 +15,8 @@ const userData = {
   updatedAt: true,
 };
 
-exports.createPostService = (data) => prisma.post.create({ data });
+exports.createPostService = async (data) =>
+  await prisma.post.create({ data, include: { likes: true, comments: true } });
 
 exports.findAllPost = async (userId, followingId) => {
   const friendId = await checkAllFollow(userId, followingId);
